@@ -1,9 +1,12 @@
 $(document).ready(function(e) {
-    $('#setting').hide();
+    $('#compression-settings').hide();
+    $('#loading-message').hide();
     $('#download').hide();
-    $('#loadingmessage').hide();
+    $('#ready').hide();
+    $('#action').hide();
+
     $('#file').change(function(e) {
-        $('#loadingmessage').show();
+        $('#loading-message').show();
         $(document).find("div.alert-danger").remove();
         var files = $(this)[0].files;
         var formData = new FormData();
@@ -23,13 +26,14 @@ $(document).ready(function(e) {
             success: function(response) {
                 handlePreviews(files);
                 $('#files\\[\\]').val(JSON.stringify(response.data));
-                $('#setting').show();
-                $('#loadingmessage').hide();
+                $('#compression-settings').show();
+                $('#loading-message').hide();
+                $('#file').hide();
             },
             error: function(xhr, status, error) {
-              var response = JSON.parse(xhr.responseText);
-              $('#loadingmessage').hide();
-              $('#validation_error').append('<div class="alert alert-danger">'+response.message+'</div');
+                var response = JSON.parse(xhr.responseText);
+                $('#loading-message').hide();
+                $('#validation-error').append('<div class="alert alert-danger">' + response.message + '</div');
             }
         });
     });
@@ -63,42 +67,52 @@ $(document).ready(function(e) {
     }
 
     function createPdfEmbed(pdfUrl) {
-        return `<embed src="${pdfUrl}" width="300" height="200" type="application/pdf">`;
+        return `<embed src="${pdfUrl}" width="100" height="100" type="application/pdf" class="mr-5">`;
     }
+    $("#compressBtn").click(function(event) {
+        event.preventDefault();
+        files = $('#files\\[\\]').val();
+        result = JSON.parse(files);
+        var btn = $('#compressBtn');
+        btn.prop('disabled', true);
+        $('#loading-message').show();
+        var data = {
+            files: result,
+            dpi: $("#dpi").val(),
+            imageQuality: $("#image-quality").val(),
+            mode: $("#mode").val(),
+            colorModel: $("#color").val(),
+        };
 
-});
-$("#compressBtn").click(function(event) {
-    event.preventDefault();
-    files = $('#files\\[\\]').val();
-    result = JSON.parse(files);
-    var btn = $('#compressBtn');
-    btn.prop('disabled', true);
-    $('#loadingmessage').show();
-    var data = {
-        files: result,
-        dpi: $("#dpi").val(),
-        imageQuality: $("#imageQuality").val(),
-        mode: $("#mode").val(),
-        colorModel: $("#colorModel").val(),
-    };
-    $.ajax({
-        type: "POST",
-        url: "/compress",
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        },
-        dataType: "json",
-        data: data,
-        success: function(response) {
-            $('#files\\[\\]').val(JSON.stringify(response.data));
-            $('#setting').show();
-            $("#jobId").val(response.data.jobId);
-            $('#count').val(response.data.job.count);
-            $('#download').show();
-            $('#loadingmessage').hide();
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-        }
+        $.ajax({
+            type: "POST",
+            url: "/compress",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            dataType: "json",
+            data: data,
+            success: function(response) {
+                $('#files\\[\\]').val(JSON.stringify(response.data));
+                $('#compression-settings').show();
+                $("#jobId").val(response.data.jobId);
+                $('#count').val(response.data.job.count);
+                $('#download').show();
+                $('#loading-message').hide();
+                $('#select-file').hide();
+                $('#ready').show();
+                $('#previewContainer').hide();
+                $('#action').show();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
     });
-});
+    $("#preview").click(function(){
+        $('#previewContainer').show();
+    });
+    $("#restart").click(function(){
+        window.location.reload()
+    });
+})

@@ -23,19 +23,6 @@ abstract class ApiRepository
         $this->domain = Config::get('api.domain');
     }
 
-    public function get(string $endPoint, array $params = []): Response
-    {
-        return $this->call('GET', $endPoint, $params);
-    }
-
-    /**
-     * @return Array|Object
-     */
-    public function post(string $endPoint, array $params): Response
-    {
-        return $this->call('POST', $endPoint, $params,);
-    }
-
     public function upload(string $endPoint = '', $params = []): Response
     {
         try {
@@ -47,7 +34,7 @@ abstract class ApiRepository
         }
     }
 
-    public function call(string $method, string $endPoint = '', $params = []): Response
+    public function callApi(string $method, string $endPoint = '', $params = []): Response
     {
         try {
             return Http::withHeaders([

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 
-class FileUplaodRequest extends FormRequest
+class FileUploadRequest extends FormRequest
 {
 
     public function rules(): array
     {
         return [
-            'file' => 'nullable|array|min:1',
-            'file.*' => 'file|mimes:pdf|max:2048',
+            'file' => ['nullable','array','min:1'],
+            'file.*' => ['file','mimes:pdf','max:2048'],
         ];
     }
 

@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <div class="container mt-5">
         <h1>Compress PDF</h1>
         <input type="file" name="file[]" multiple id="file">

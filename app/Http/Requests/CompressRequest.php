@@ -14,6 +14,7 @@ class CompressRequest extends FormRequest
             'colorModel' => ['nullable', 'string'],
             'imageQuality' => ['required', 'integer', 'min:1'],
             'dpi' => ['required', 'integer', 'min:1'],
+            'mode' => ['required']
         ];
     }
 }

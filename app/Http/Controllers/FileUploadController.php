@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Repository\FileUpload\FileUploadRepositoryInterface;
 use App\Http\Requests\CompressRequest;
 use App\Http\Requests\DownloadRequest;
-use App\Http\Requests\FileUplaodRequest;
+use App\Http\Requests\FileUploadRequest;
 use App\Http\Resources\CompressPdfResource;
 use Exception;
 use Illuminate\Http\Client\Response;
@@ -23,13 +23,15 @@ class FileUploadController extends Controller
         $this->fileUploadRepository = $fileUploadRepository;
     }
 
-    public function upload(FileUplaodRequest $request): CompressPdfResource
+    public function upload(FileUploadRequest $request): CompressPdfResource
     {
         try {
             $result = $this->fileUploadRepository->fileUpload($request->file);
+           
             $cookieHeader = $result->cookies()->toArray();
             Session::put('cookie_name', $cookieHeader[0]['Name']);
             Session::put('cookie_value', $cookieHeader[0]['Value']);
+            
         } catch (Exception $e) {
             Log::error($e->getMessage());
             throw new Exception($e->getMessage());

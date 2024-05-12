@@ -20,18 +20,18 @@ class FileUploadRepository extends ApiRepository implements FileUploadRepository
     {
         $endPoint = 'compressPdf';
 
-        return $this->post($endPoint, $params);
+        return $this->callApi('POST', $endPoint, $params);
     }
 
     public function startJob(array $params = []): Response
     {
         $params = array_merge($params, ['action' => 'getStatus']);
         
-        return $this->get('',$params);
+        return $this->callApi('GET', '', $params);
     }
 
     public function download(array $params): Response
     {
-        return $this->get('', $params);
+        return $this->callApi('GET', '', $params);
     }
 }
