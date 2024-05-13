@@ -12,7 +12,7 @@ class FileUploadRequest extends FormRequest
     {
         return [
             'file' => ['nullable','array','min:1'],
-            'file.*' => ['file','mimes:pdf','max:2048'],
+            'file.*' => ['file','mimes:pdf','max:1024'],
         ];
     }
 

@@ -57,10 +57,11 @@ class FileUploadController extends Controller
     {
         try{
             $response = $this->fileUploadRepository->download($request->prepareParam());
-            $extention = isset($request->count) > 1 ? 'zip' : 'pdf';
-    
+            
+            $extention = $request->count > 1 ? 'zip' : 'pdf';
+
             $filename = 'downloaded_file.' . $extention;
-    
+           
         }catch(Exception $e)
         {
             Log::error($e->getMessage());
